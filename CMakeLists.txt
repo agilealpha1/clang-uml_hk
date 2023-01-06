@@ -10,6 +10,8 @@ project(clang-uml)
 #
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_COMPILER /usr/local/Cellar/llvm/15.0.6/bin/clang++ CACHE FILEPATH "Path to C++ compiler")
+
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_FIND_DEBUG_MODE OFF)
 if(APPLE)
@@ -27,8 +29,13 @@ set(UML_HEADERS_DIR ${PROJECT_SOURCE_DIR}/src/uml)
 # CMake build options
 #
 option(LINK_LLVM_SHARED "Should LLVM be linked using shared libraries or statically" ON)
+#set(LLVM_CONFIG_EXECUTABLE "/usr/local/Cellar/llvm/15.0.6/lib/cmake/llvm" CACHE FILEPATH "Path to custom llvm-config executable")
 set(LLVM_VERSION CACHE STRING "Path to custom llvm-config executable")
 set(GIT_VERSION "0.3.0" CACHE STRING "clang-uml version")
+
+#export CXX=/usr/local/Cellar/llvm/15.0.6/bin/clang++
+
+
 
 #
 # Setup LLVM
@@ -105,7 +112,9 @@ else(APPLE)
     find_package(yaml-cpp REQUIRED)
 endif(APPLE)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -Wextra -std=c++17 -Wno-unused-parameter -Wno-unused-private-field")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++17 -Wno-unused-parameter -Wno-unused-private-field")
+# disable the -werreor flag
+#add_compile_options(-Werror -Wno-error=format-security)
 
 link_directories(${LLVM_LIBRARY_DIR} ${YAML_CPP_LIBRARY_DIR})
 
@@ -133,6 +142,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 message(STATUS "Using CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+
 
 #
 # Setup include directories
